@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudentRepo extends JpaRepository<Student,Long> {
     public default  Student getStudentByRegNo(String regNo){
-        return Student.builder().build();
+        return new Student();
     }
 
 }

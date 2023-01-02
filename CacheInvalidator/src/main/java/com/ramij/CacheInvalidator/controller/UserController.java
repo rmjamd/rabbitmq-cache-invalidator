@@ -36,8 +36,8 @@ public class UserController {
     public Student deleteStudent(@RequestParam Long id){
         return studentService.deleteStudent(id);
     }
-    @RequestMapping(value="/student",method =RequestMethod.POST)
-    public Student createStudent(Student studentDetails){
+    @RequestMapping(value="/student/create",method =RequestMethod.POST)
+    public Student createStudent(@RequestBody Student studentDetails){
         return studentService.createStudent(studentDetails);
     }
     @RequestMapping(value = "/student/{id}", method = RequestMethod.GET)

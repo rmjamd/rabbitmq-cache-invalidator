@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -16,6 +17,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student createStudent(Student s) {
+        String uniqueID = UUID.randomUUID().toString();
+        s.setRegNo(uniqueID);
         return repo.save(s);
     }
 
@@ -43,7 +46,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getStudentByRegNo(String regNo) {
-        return repo.getStudentByRegNo(regNo);
+        Student s= repo.getStudentByRegNo(regNo);
+        if(Tools.isNullOrEmpty(s.getRegNo()))
+            return null;
+        return s;
     }
 
     @Override

@@ -2,12 +2,12 @@ package com.ramij.CacheInvalidator;
 
 public class Tools {
     public static String getOrDefault(String firstString ,String secondString){
-        if(Tools.isNullorEmpty(firstString))
+        if(!Tools.isNullOrEmpty(firstString))
             return firstString;
         return secondString;
     }
-    public static boolean isNullorEmpty(String str){
-        return (str!=null && !str.isEmpty());
+    public static boolean isNullOrEmpty(String str){
+        return !(str!=null && !str.isEmpty());
     }
 
 
