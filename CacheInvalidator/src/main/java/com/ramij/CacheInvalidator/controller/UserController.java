@@ -28,12 +28,12 @@ public class UserController {
     public List<Student> getAllStudent() {
         return studentService.getAll();
     }
-    @RequestMapping(value="/student/{id}" ,method = RequestMethod.PUT)
+    @RequestMapping(value="/student/update/{id}" ,method = RequestMethod.PUT)
     public Student updateStudent(@PathVariable Long id,@RequestBody Student studentDetails){
         return studentService.updateStudent(id,studentDetails);
     }
     @RequestMapping(value="/student/{id}",method=RequestMethod.DELETE)
-    public Student deleteStudent(@RequestParam Long id){
+    public Student deleteStudent(@PathVariable Long id){
         return studentService.deleteStudent(id);
     }
     @RequestMapping(value="/student/create",method =RequestMethod.POST)

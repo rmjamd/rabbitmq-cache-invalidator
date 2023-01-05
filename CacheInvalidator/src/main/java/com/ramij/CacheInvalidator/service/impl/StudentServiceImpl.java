@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,7 +25,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student updateStudent(Long id, Student s) {
-        Student updatedStudent=repo.getReferenceById(id);
+        Student updatedStudent=repo.findById(id).orElse(null);
+        if(updatedStudent==null)
+            return updatedStudent;
         updatedStudent.setCourse(Tools.getOrDefault(s.getCourse(),updatedStudent.getCourse()));
         updatedStudent.setEmail(Tools.getOrDefault(s.getEmail(),updatedStudent.getEmail()));
         updatedStudent.setName(Tools.getOrDefault(s.getName(),updatedStudent.getName()));
@@ -33,10 +36,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student deleteStudent(Long id) {
-        Student deletedStudent=repo.getReferenceById(id);
+        Optional<Student> deletedStudent=repo.findById(id);
         //ToDo: implements repo.findBy()
-        repo.deleteById(id);
-        return deletedStudent;
+        if(!deletedStudent.isEmpty()){
+            repo.deleteById(id);
+        }
+        return deletedStudent.orElse(null);
     }
 
     @Override
