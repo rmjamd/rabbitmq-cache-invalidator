@@ -14,6 +14,7 @@ public interface StudentService {
 
     public Student getStudentById(Long id);
     public Student getStudentByRegNo(String regNo);
+    public String getStudentEMailIdByRegNo(String regNo);
 
     public List<Student> getAll();
 }

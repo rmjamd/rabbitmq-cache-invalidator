@@ -58,6 +58,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public String getStudentEMailIdByRegNo(String regNo) {
+        String name=repo.getStudentEmailIdByRegNo(regNo);
+        return name;
+    }
+
+    @Override
     public List<Student> getAll() {
         return repo.findAll();
     }

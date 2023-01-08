@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface StudentRepo extends JpaRepository<Student,Long> {
     @Query("SELECT s FROM Student s WHERE s.regNo=?1")
     Student getStudentByRegNo(String regNo);
-
+    @Query("Select s.email From Student s Where s.regNo=?1")
+    String getStudentEmailIdByRegNo(String regNo);
 }

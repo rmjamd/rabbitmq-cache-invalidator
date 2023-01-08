@@ -16,10 +16,6 @@ public class UserController {
     public String getGreeting() {
         return "hi! welcome to this Project";
     }
-//    @RequestMapping(value = "/student", method = RequestMethod.GET)
-//    public Student getTestData() {
-//        return Student.builder().id("1234").name("ramij").course("cse").email("ramijnalpur@gmail.com").build();
-//    }
     @RequestMapping(value = "/student", method = RequestMethod.GET)
     public Student getStudentByRegNo(@RequestParam String regNo) {
         return studentService.getStudentByRegNo(regNo);
@@ -45,5 +41,9 @@ public class UserController {
         return studentService.getStudentById(id);
     }
 
+    @RequestMapping(value="/student/email",method =RequestMethod.GET)
+    public String getStudentEmailIdByRegNo(@RequestParam String regNo){
+        return studentService.getStudentEMailIdByRegNo(regNo);
+    }
 
 }
