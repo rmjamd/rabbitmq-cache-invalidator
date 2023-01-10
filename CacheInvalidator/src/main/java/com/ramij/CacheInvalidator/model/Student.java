@@ -10,20 +10,20 @@ import javax.persistence.*;
 @Data
 @Entity
 //defining class name as Table name
-@Table(name="Students")
+@Table(name = "Students")
 @NoArgsConstructor
 //defining class name as Table name
 public class Student {
     @Id
     @GeneratedValue
-    @Column(name="Id")
+    @Column(name = "Id")
     private Long id;
-    @Column(name="Name")
+    @Column(name = "Name")
     private String name;
-    @Column(name="Email")
+    @Column(name = "Email")
     private String email;
-    @Column(name="Course")
+    @Column(name = "Course")
     private String course;
-    @Column(name="RegNo")
+    @Column(name = "RegNo")
     private String regNo;
 }
