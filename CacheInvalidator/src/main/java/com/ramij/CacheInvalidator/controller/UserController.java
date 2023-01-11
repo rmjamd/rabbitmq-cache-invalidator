@@ -50,7 +50,7 @@ public class UserController {
 
     @RequestMapping(value = "/student/email", method = RequestMethod.GET)
     public String getStudentEmailIdByRegNo(@RequestParam String regNo) {
-        return studentService.getStudentEMailIdByRegNo(regNo);
+        return studentService.getStudentEmailIdByRegNo(regNo);
     }
 
 }

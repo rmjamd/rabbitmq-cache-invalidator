@@ -1,5 +1,8 @@
 package com.ramij.CacheInvalidator.service.impl;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.ramij.CacheInvalidator.Tools;
 import com.ramij.CacheInvalidator.model.Student;
 import com.ramij.CacheInvalidator.persistence.StudentRepo;
@@ -7,14 +10,28 @@ import com.ramij.CacheInvalidator.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class StudentServiceImpl implements StudentService {
     @Autowired
     StudentRepo repo;
+    private LoadingCache<String, String> cache;
+
+    @PostConstruct
+    void init() {
+        cache = CacheBuilder.newBuilder().build(new CacheLoader<String, String>() {
+            @Override
+            public String load(String regNo) throws Exception {
+                System.out.println("database Calling with Key " + regNo);
+                return repo.getStudentEmailIdByRegNo(regNo);
+            }
+        });
+    }
 
     @Override
     public Student createStudent(Student s) {
@@ -25,21 +42,26 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student updateStudent(Long id, Student s) {
-        Student updatedStudent=repo.findById(id).orElse(null);
-        if(updatedStudent==null)
+        Student updatedStudent = repo.findById(id).orElse(null);
+        if (updatedStudent == null)
             return updatedStudent;
-        updatedStudent.setCourse(Tools.getOrDefault(s.getCourse(),updatedStudent.getCourse()));
-        updatedStudent.setEmail(Tools.getOrDefault(s.getEmail(),updatedStudent.getEmail()));
-        updatedStudent.setName(Tools.getOrDefault(s.getName(),updatedStudent.getName()));
-        return repo.save(updatedStudent);
+        updatedStudent.setCourse(Tools.getOrDefault(s.getCourse(), updatedStudent.getCourse()));
+        updatedStudent.setEmail(Tools.getOrDefault(s.getEmail(), updatedStudent.getEmail()));
+        updatedStudent.setName(Tools.getOrDefault(s.getName(), updatedStudent.getName()));
+        Student result=repo.save(updatedStudent);
+        if(s.getEmail()!=null){
+            cache.invalidate(updatedStudent.getRegNo());
+        }
+        return result;
     }
 
     @Override
     public Student deleteStudent(Long id) {
-        Optional<Student> deletedStudent=repo.findById(id);
+        Optional<Student> deletedStudent = repo.findById(id);
         //ToDo: implements repo.findBy()
-        if(!deletedStudent.isEmpty()){
+        if (!deletedStudent.isEmpty()) {
             repo.deleteById(id);
+            cache.invalidate(deletedStudent.get().getEmail());
         }
         return deletedStudent.orElse(null);
     }
@@ -51,16 +73,20 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getStudentByRegNo(String regNo) {
-        Student s= repo.getStudentByRegNo(regNo);
-        if(Tools.isNullOrEmpty(s.getRegNo()))
+        Student s = repo.getStudentByRegNo(regNo);
+        if (Tools.isNullOrEmpty(s.getRegNo()))
             return null;
         return s;
     }
 
     @Override
-    public String getStudentEMailIdByRegNo(String regNo) {
-        String name=repo.getStudentEmailIdByRegNo(regNo);
-        return name;
+    public String getStudentEmailIdByRegNo(String regNo) {
+        try {
+            return cache.get(regNo);
+        } catch (ExecutionException e) {
+            System.out.println("Exception occurred While fetching emailId from cache");
+        }
+        return null;
     }
 
     @Override
