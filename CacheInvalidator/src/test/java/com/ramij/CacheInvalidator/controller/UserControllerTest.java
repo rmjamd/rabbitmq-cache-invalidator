@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ramij.CacheInvalidator.model.Student;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -74,5 +75,32 @@ public class UserControllerTest {
         String str = result.getResponse().getContentAsString();
         JSONAssert.assertNotEquals(result.getResponse().getContentAsString(), new JSONObject(), false);
     }
+    @Test
+    public void updateStudents() throws Exception {
+        Student s=new Student();
+        s.setName("mijanur da");
+        s.setCourse("ETC");
+        s.setEmail("ramij@gmail.com");
+        String inputJson = mapToJson(s);
+        MvcResult result=mockMvc.perform(MockMvcRequestBuilders.post("/api/student/create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(inputJson)).andReturn();
+        //updating some field in student
+        s.setEmail("ram@gmail.com");
+        s.setCourse("EVE");
+        String updatedJson=mapToJson(s);
+        Long id=mapFromJson(result.getResponse().getContentAsString().toString(), Student.class).getId();
+        MvcResult newResult=mockMvc.perform(MockMvcRequestBuilders.put("/api/student/update/"+id)
+                .content(updatedJson).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        Student updatedStudent=mapFromJson(newResult.getResponse().getContentAsString(),Student.class);
+        System.out.println(updatedStudent);
+        Assert.assertEquals(updatedStudent.getCourse(),"EVE");
+    }
+    @Test
+    public void deleteStudent(){
+
+    }
+
+
 
 }
