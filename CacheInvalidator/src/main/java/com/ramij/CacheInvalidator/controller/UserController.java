@@ -33,7 +33,7 @@ public class UserController {
         return studentService.updateStudent(id, studentDetails);
     }
 
-    @RequestMapping(value = "/student/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/student/delete/{id}", method = RequestMethod.DELETE)
     public Student deleteStudent(@PathVariable Long id) {
         return studentService.deleteStudent(id);
     }

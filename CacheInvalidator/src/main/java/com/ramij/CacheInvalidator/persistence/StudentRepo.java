@@ -12,5 +12,7 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
 
     @Query("Select s.email From Student s Where s.regNo=?1")
     String getStudentEmailIdByRegNo(String regNo);
+    @Query("Select s From Student s Where s.id=?1")
+    Student getReferenceById(Long id);
 
 }

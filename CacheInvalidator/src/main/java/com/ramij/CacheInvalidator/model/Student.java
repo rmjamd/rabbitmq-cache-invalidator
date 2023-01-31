@@ -1,8 +1,8 @@
 package com.ramij.CacheInvalidator.model;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
@@ -11,7 +11,8 @@ import javax.persistence.*;
 @Entity
 //defining class name as Table name
 @Table(name = "Students")
-@NoArgsConstructor
+@NoArgsConstructor()
+@Accessors(chain=true)
 //defining class name as Table name
 public class Student {
     @Id

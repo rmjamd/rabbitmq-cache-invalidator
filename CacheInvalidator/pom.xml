@@ -11,7 +11,7 @@
 	<groupId>com.ramij</groupId>
 	<artifactId>CacheInvalidator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>CacheInvalidator</name>
 	<description>Distributed Cache Invalidator Using rabbitmq</description>
 	<properties>
