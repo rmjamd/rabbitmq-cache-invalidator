@@ -1,7 +1,6 @@
 package com.ramij.CacheInvalidator;
 
 import com.rabbitmq.client.Channel;
-import com.ramij.CacheInvalidator.model.RabbitmqProperty;
 import com.ramij.CacheInvalidator.rmq.MessageBus;
 import com.ramij.CacheInvalidator.rmq.MessageTopic;
 import org.junit.Test;
@@ -16,18 +15,24 @@ import java.io.IOException;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CacheInvalidatorApplicationTests {
 
-	@Autowired
-	RabbitmqProperty rmqProperty;
 	Channel channel;
+	@Autowired
+	MessageBus messageBus;
+	@Autowired
+	MessageBus messageBus2;
+
 	@Test
 	public void contextLoads() throws IOException {
-		MessageBus messageBus=new MessageBus();
 		MessageTopic<String> topic1=messageBus.createTopic(this.getClass().getSimpleName(),String.class);
 		topic1.addListener(System.out::println);
-		MessageBus messageBus2=new MessageBus();
+
 		MessageTopic<String> topic2=messageBus2.createTopic(this.getClass().getSimpleName(),String.class);
 		topic2.addListener(System.out::println);
 		topic1.publish("hi i am ramij");
+//		MessageBus messageBus3 =new MessageBus(rmqProperty);
+//		MessageTopic<String> topic3=messageBus3.createTopic(this.getClass().getSimpleName(),String.class);
+//		topic3.addListener(System.out::println);
+
 
 
 	}

@@ -6,6 +6,8 @@ import com.google.common.cache.LoadingCache;
 import com.ramij.CacheInvalidator.Tools;
 import com.ramij.CacheInvalidator.model.Student;
 import com.ramij.CacheInvalidator.persistence.StudentRepo;
+import com.ramij.CacheInvalidator.rmq.MessageBus;
+import com.ramij.CacheInvalidator.rmq.MessageTopic;
 import com.ramij.CacheInvalidator.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     StudentRepo repo;
     private LoadingCache<String, String> cache;
+    @Autowired
+    MessageBus messageBus;
+    MessageTopic<String> topic;
 
     @PostConstruct
     void init() {
@@ -31,6 +36,13 @@ public class StudentServiceImpl implements StudentService {
                 return repo.getStudentEmailIdByRegNo(regNo);
             }
         });
+        try {
+            topic = messageBus.createTopic(this.getClass().getSimpleName(), String.class);
+            topic.addListener(cacheKey->cache.invalidate(cacheKey));
+        } catch (Exception e) {
+            throw new RuntimeException("Can't Initialize MessageBus");
+        }
+
     }
 
     @Override
@@ -44,7 +56,7 @@ public class StudentServiceImpl implements StudentService {
     public Student updateStudent(Long id, Student s) {
         Student updatedStudent = repo.findById(id).orElse(null);
         if (updatedStudent == null)
-            return updatedStudent;
+            return null;
         updatedStudent.setCourse(Tools.getOrDefault(s.getCourse(), updatedStudent.getCourse()));
         updatedStudent.setEmail(Tools.getOrDefault(s.getEmail(), updatedStudent.getEmail()));
         updatedStudent.setName(Tools.getOrDefault(s.getName(), updatedStudent.getName()));
@@ -61,7 +73,13 @@ public class StudentServiceImpl implements StudentService {
         //ToDo: implements repo.findBy()
         if (!deletedStudent.isEmpty()) {
             repo.deleteById(id);
-            cache.invalidate(deletedStudent.get().getEmail());
+            try {
+                topic.publish(deletedStudent.get().getRegNo());
+            } catch (Exception e) {
+                throw new RuntimeException("Error Occurred In Deleting Student");
+            }
+            cache.invalidate(deletedStudent.get().getRegNo());
+
         }
         return deletedStudent.orElse(null);
     }
