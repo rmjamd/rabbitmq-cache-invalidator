@@ -9,6 +9,7 @@ import com.ramij.CacheInvalidator.persistence.StudentRepo;
 import com.ramij.CacheInvalidator.rmq.MessageBus;
 import com.ramij.CacheInvalidator.rmq.MessageTopic;
 import com.ramij.CacheInvalidator.service.StudentService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,11 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Service
+@Log4j2
 public class StudentServiceImpl implements StudentService {
     @Autowired
     StudentRepo repo;
-    private LoadingCache<String, String> cache;
+    private LoadingCache<String, String> cache;   //regNo --> emailId
     @Autowired
     MessageBus messageBus;
     MessageTopic<String> topic;
@@ -33,12 +35,21 @@ public class StudentServiceImpl implements StudentService {
             @Override
             public String load(String regNo) throws Exception {
                 System.out.println("database Calling with Key " + regNo);
+                log.info("database Calling with Key => {}", regNo);
                 return repo.getStudentEmailIdByRegNo(regNo);
             }
         });
         try {
             topic = messageBus.createTopic(this.getClass().getSimpleName(), String.class);
-            topic.addListener(cacheKey->cache.invalidate(cacheKey));
+            topic.addListener(cacheKey -> {
+                try {
+                    log.info("InValidating Cache Key => {} value => {}", cacheKey, cache.get(cacheKey));
+                }catch (Exception e)
+                {
+                    log.error("Error While Invalidating cache Key");
+                }
+                cache.invalidate(cacheKey);
+            });
         } catch (Exception e) {
             throw new RuntimeException("Can't Initialize MessageBus");
         }
@@ -60,8 +71,8 @@ public class StudentServiceImpl implements StudentService {
         updatedStudent.setCourse(Tools.getOrDefault(s.getCourse(), updatedStudent.getCourse()));
         updatedStudent.setEmail(Tools.getOrDefault(s.getEmail(), updatedStudent.getEmail()));
         updatedStudent.setName(Tools.getOrDefault(s.getName(), updatedStudent.getName()));
-        Student result=repo.save(updatedStudent);
-        if(s.getEmail()!=null){
+        Student result = repo.save(updatedStudent);
+        if (s.getEmail() != null) {
             cache.invalidate(updatedStudent.getRegNo());
         }
         return result;
@@ -74,6 +85,7 @@ public class StudentServiceImpl implements StudentService {
         if (!deletedStudent.isEmpty()) {
             repo.deleteById(id);
             try {
+                log.info("Invalidating cached EmailId for the RegNo => {},", deletedStudent.get().getRegNo());
                 topic.publish(deletedStudent.get().getRegNo());
             } catch (Exception e) {
                 throw new RuntimeException("Error Occurred In Deleting Student");
