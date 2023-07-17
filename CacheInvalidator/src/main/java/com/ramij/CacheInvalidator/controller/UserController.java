@@ -1,54 +1,62 @@
+
 package com.ramij.CacheInvalidator.controller;
 
 import com.ramij.CacheInvalidator.model.Student;
 import com.ramij.CacheInvalidator.service.StudentService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController()
+@RestController
 @RequestMapping("/api")
+@Log4j2
 public class UserController {
-    @Autowired
-    StudentService studentService;
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @Autowired
+    private StudentService studentService;
+
+    @GetMapping("/greeting")
     public String getGreeting() {
-        return "hi! welcome to this Project";
+        return "Hi! Welcome to this project";
     }
 
-    @RequestMapping(value = "/student", method = RequestMethod.GET)
-    public Student getStudentByRegNo(@RequestParam String regNo) {
+    @GetMapping("/students/regNo/{regNo}")
+    public Student getStudentByRegNo(@PathVariable String regNo) {
+        log.info("Inside getStudentByRegNo | regNo => {}", regNo);
         return studentService.getStudentByRegNo(regNo);
     }
 
-    @RequestMapping(value = "/students", method = RequestMethod.GET)
-    public List<Student> getAllStudent() {
+    @GetMapping("/students")
+    public List<Student> getAllStudents() {
         return studentService.getAll();
     }
 
-    @RequestMapping(value = "/student/update/{id}", method = RequestMethod.PUT)
+    @PutMapping("/students/{id}")
     public Student updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
+        log.info("Inside updateStudent | Id => {} | Student Details => {}", id, studentDetails);
         return studentService.updateStudent(id, studentDetails);
     }
 
-    @RequestMapping(value = "/student/delete/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/students/{id}")
     public Student deleteStudent(@PathVariable Long id) {
+        log.info("Inside deleteStudent | Id => {}", id);
         return studentService.deleteStudent(id);
     }
 
-    @RequestMapping(value = "/student/create", method = RequestMethod.POST)
+    @PostMapping("/students")
     public Student createStudent(@RequestBody Student studentDetails) {
+        log.info("Inside createStudent | Student Details => {}", studentDetails);
         return studentService.createStudent(studentDetails);
     }
 
-    @RequestMapping(value = "/student/{id}", method = RequestMethod.GET)
+    @GetMapping("/students/id/{id}")
     public Student getStudentById(@PathVariable Long id) {
         return studentService.getStudentById(id);
     }
 
-    @RequestMapping(value = "/student/email", method = RequestMethod.GET)
+    @GetMapping("/students/email")
     public String getStudentEmailIdByRegNo(@RequestParam String regNo) {
         return studentService.getStudentEmailIdByRegNo(regNo);
     }

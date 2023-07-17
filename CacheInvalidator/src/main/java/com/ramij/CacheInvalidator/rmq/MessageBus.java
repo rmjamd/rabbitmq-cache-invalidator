@@ -29,7 +29,7 @@ public class MessageBus implements Closeable{
     @PostConstruct
     private void initializeRmqConnectionFactory() {
         factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost(rmqProperty.getHost());
         factory.setUsername(rmqProperty.getUsername());
         factory.setPassword(rmqProperty.getPassword());
         try {
@@ -41,7 +41,7 @@ public class MessageBus implements Closeable{
 
     public MessageBus(RabbitmqProperty rmqProperty) {
         factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost(rmqProperty.getHost());
         factory.setUsername(rmqProperty.getUsername());
         factory.setPassword(rmqProperty.getPassword());
         try {

@@ -34,7 +34,6 @@ public class StudentServiceImpl implements StudentService {
         cache = CacheBuilder.newBuilder().build(new CacheLoader<String, String>() {
             @Override
             public String load(String regNo) throws Exception {
-                System.out.println("database Calling with Key " + regNo);
                 log.info("database Calling with Key => {}", regNo);
                 return repo.getStudentEmailIdByRegNo(regNo);
             }
@@ -42,12 +41,7 @@ public class StudentServiceImpl implements StudentService {
         try {
             topic = messageBus.createTopic(this.getClass().getSimpleName(), String.class);
             topic.addListener(cacheKey -> {
-                try {
-                    log.info("InValidating Cache Key => {} value => {}", cacheKey, cache.get(cacheKey));
-                }catch (Exception e)
-                {
-                    log.error("Error While Invalidating cache Key");
-                }
+                log.info("InValidating Cache Key => {}", cacheKey);
                 cache.invalidate(cacheKey);
             });
         } catch (Exception e) {
