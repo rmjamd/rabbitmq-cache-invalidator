@@ -1,0 +1,208 @@
+{
+	"info": {
+		"_postman_id": "317cffd6-b745-47f3-a4f4-3cc983df48eb",
+		"name": "Cache Invalidator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{CACHE_INVALIDATOR}}/CacheInvalidator/api/greeting",
+					"protocol": "http",
+					"host": [
+						"{{CACHE_INVALIDATOR}}"
+					],
+					"path": [
+						"CacheInvalidator",
+						"api",
+						"greeting"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStudentById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{CACHE_INVALIDATOR}}/api/student/id/:id",
+					"protocol": "http",
+					"host": [
+						"{{CACHE_INVALIDATOR}}"
+					],
+					"path": [
+						"api",
+						"student",
+						"id",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStudentByRegNo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{CACHE_INVALIDATOR}}/api/student/regNo/:regNo",
+					"protocol": "http",
+					"host": [
+						"{{CACHE_INVALIDATOR}}"
+					],
+					"path": [
+						"api",
+						"student",
+						"regNo",
+						":regNo"
+					],
+					"variable": [
+						{
+							"key": "regNo",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createStudent",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"rohit sardar\",\n    \"email\":\"rohit@gmail.com\",\n    \"course\":\"CSE\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{CACHE_INVALIDATOR}}/api/students",
+					"protocol": "http",
+					"host": [
+						"{{CACHE_INVALIDATOR}}"
+					],
+					"path": [
+						"api",
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllStudent",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{CACHE_INVALIDATOR}}/api/students",
+					"protocol": "http",
+					"host": [
+						"{{CACHE_INVALIDATOR}}"
+					],
+					"path": [
+						"api",
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteStudent",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://{{CACHE_INVALIDATOR}}/api/students/:ID",
+					"protocol": "http",
+					"host": [
+						"{{CACHE_INVALIDATOR}}"
+					],
+					"path": [
+						"api",
+						"students",
+						":ID"
+					],
+					"variable": [
+						{
+							"key": "ID",
+							"value": "4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateStudent",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://{{CACHE_INVALIDATOR}}/api/students/:ID",
+					"protocol": "http",
+					"host": [
+						"{{CACHE_INVALIDATOR}}"
+					],
+					"path": [
+						"api",
+						"students",
+						":ID"
+					],
+					"variable": [
+						{
+							"key": "ID",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStudentEmailIdByRegNo",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{CACHE_INVALIDATOR}}/api/email/:regNo",
+					"protocol": "http",
+					"host": [
+						"{{CACHE_INVALIDATOR}}"
+					],
+					"path": [
+						"api",
+						"email",
+						":regNo"
+					],
+					"variable": [
+						{
+							"key": "regNo",
+							"value": "cb2d4f56-7037-456e-9a80-16c37c2071b3"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
