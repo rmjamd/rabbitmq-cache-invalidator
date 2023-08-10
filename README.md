@@ -14,8 +14,8 @@ component for cache invalidation. The message bus is responsible for managing th
 connection with the message broker (such as RabbitMQ) and generating a unique ID for
 each class or component that needs cache invalidation.
 
-2. Create Message Topic: Once the message bus is set up, you can create a cache topic. A
-cache topic represents a specific topic or channel for cache invalidation messages.
+2. Create a Message Topic: Once the message bus is set up, you can create a cached topic.
+A cache topic represents a specific topic or channel for cache invalidation messages.
 When creating a Message topic, you need to provide the topic name and the data type
 associated with cache invalidation.
 
@@ -43,7 +43,7 @@ been invalidated.
 
 ## Documentation
 
-[Documentation](https://linktodocumentation)
+[Documentation](https://github.com/rmjamd/DistributedCacheInvalidator/blob/master/cache_invalidation_docs.pdf)
 
 
 ## Prerequisites
